@@ -2,7 +2,7 @@
 var express = require('express');
 var fs = require('fs');
 
-var file = "BitStarter/index.html";
+var file = "index.html";
 var app = express.createServer(express.logger());
 var buf = new Buffer(256);
 
