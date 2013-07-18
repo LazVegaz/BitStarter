@@ -30,6 +30,7 @@ var rest = require('restler');
 var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
 var URL_DEFAULT = "http://cloud9-vgaz.herokuapp.com/";
+//var URL_DEFAULT = "http://www.google.com/";
 
 var assertFileExists = function(infile) {
     var instr = infile.toString();
@@ -67,12 +68,15 @@ var clone = function(fn) {
 
 
 var url2file = function (url) {
+    console.log("URL:",url);
     rest.get(url).on('complete', function(result) {
       if (result instanceof Error) {
         sys.puts('Error: ' + result.message);
         this.retry(5000); // try again after 5 sec
       } else {
         //sys.puts(result);
+        //console.log("URL2:",url);
+        return result;
       }
     });
 };
@@ -83,8 +87,13 @@ if(require.main == module) {
     program
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
-        .option('-u, --url <url_file>', 'Path to URL', url2file(URL_DEFAULT))
+        .option('-u, --url <url_file>', 'Path to URL', url2file(process.argv[5]))
         .parse(process.argv);
+        //console.log(process.argv);
+    //console.log("pgm.file:",program.file);
+    //console.log("pgm.check:",program.checks);
+    //console.log("pgm.url:",process.argv[5]);
+    console.log("pgm.url:",program.url);
     var checkJson = checkHtmlFile(program.file, program.checks);
     var outJson = JSON.stringify(checkJson, null, 4);
     console.log(outJson);
